@@ -16,7 +16,7 @@
 #define WIDTH 80
 #define HEIGHT 22
 
-// CONFIGURACION
+
 #define TARGET_FPS 15
 
 #define DONUT_TEXT_LINES 4
@@ -133,7 +133,7 @@ int main(void)
     {
         uint64_t frameStart = OSGetTime();
 
-        // Control de salida
+
         VPADRead(VPAD_CHAN_0, &status, 1, &error);
 
         if (error == VPAD_READ_SUCCESS)
@@ -148,8 +148,8 @@ int main(void)
 
         Renderer_BeginFrame();
 
-        DrawDonut(1.0f, false);  // TV: tamaño original
-		DrawDonut(0.70f, true);  // GamePad: 70 % de tamaño
+        DrawDonut(1.0f, false);  
+		DrawDonut(0.70f, true);  
 
 		A += 0.04f;
 		B += 0.02f;
@@ -159,7 +159,7 @@ int main(void)
             Renderer_DrawText(0, HEIGHT + i, DONUT_TEXT[i]);
         }
 
-        // Medidor de FPS
+        
         snprintf(fpsText, sizeof(fpsText),
                  "FPS: %u / %d", displayedFPS, TARGET_FPS);
 
@@ -168,7 +168,7 @@ int main(void)
 
         Renderer_EndFrame();
 
-        // Calcular FPS real
+        
         frameCount++;
 
         uint64_t now = OSGetTime();
@@ -183,7 +183,7 @@ int main(void)
             fpsStart = now;
         }
 
-        // Limitar FPS
+        
         if (lastFrame != 0)
         {
             uint64_t elapsed = now - lastFrame;
