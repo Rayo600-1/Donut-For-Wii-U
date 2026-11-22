@@ -1,4 +1,3 @@
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -8,7 +7,6 @@
 
 #include <coreinit/thread.h>
 #include <coreinit/time.h>
-#include <vpad/input.h>
 #include <whb/proc.h>
 
 #include "renderer.h"
@@ -16,7 +14,7 @@
 #define WIDTH 80
 #define HEIGHT 22
 
-
+// CONFIGURACION
 #define TARGET_FPS 15
 
 #define DONUT_TEXT_LINES 4
@@ -24,7 +22,7 @@
 static const char *DONUT_TEXT[DONUT_TEXT_LINES] = {
     "Donut.C for Wii U",
     "Original code by Andy Sloane",
-	"https://www.a1k0n.net/2021/01/13/optimizing-donut.html",
+    "https://www.a1k0n.net/2021/01/13/optimizing-donut.html",
     "Ported to Wii U by Rayo600"
 };
 
@@ -58,11 +56,11 @@ static void DrawDonut(float scale, bool gamepad)
 
             float t = c * h * g - f * e;
 
-		int x = (int)(WIDTH / 2 + 30.0f * scale * D *
-			(l * h * m - t * n));
+            int x = (int)(WIDTH / 2 + 30.0f * scale * D *
+                (l * h * m - t * n));
 
-		int y = (int)(HEIGHT / 2 + 15.0f * scale * D *
-			(l * h * n + t * m));
+            int y = (int)(HEIGHT / 2 + 15.0f * scale * D *
+                (l * h * n + t * m));
 
             int o = x + WIDTH * y;
 
@@ -95,10 +93,11 @@ static void DrawDonut(float scale, bool gamepad)
         }
 
         linea[WIDTH] = '\0';
-		if (gamepad)
-			Renderer_DrawTextDRC(0, y, linea);
-			else
-				Renderer_DrawTextTV(0, y, linea);
+
+        if (gamepad)
+            Renderer_DrawTextDRC(0, y, linea);
+        else
+            Renderer_DrawTextTV(0, y, linea);
     }
 
     A += 0.04f;
@@ -115,9 +114,6 @@ int main(void)
         return 0;
     }
 
-    VPADStatus status;
-    VPADReadError error;
-
     uint64_t lastFrame = 0;
     uint64_t fpsStart = OSGetTime();
 
@@ -133,33 +129,20 @@ int main(void)
     {
         uint64_t frameStart = OSGetTime();
 
-
-        VPADRead(VPAD_CHAN_0, &status, 1, &error);
-
-        if (error == VPAD_READ_SUCCESS)
-        {
-            if (status.trigger & (VPAD_BUTTON_HOME |
-                                  VPAD_BUTTON_MINUS |
-                                  VPAD_BUTTON_PLUS))
-            {
-                break;
-            }
-        }
-
         Renderer_BeginFrame();
 
-        DrawDonut(1.0f, false);  
-		DrawDonut(0.70f, true);  
+        DrawDonut(1.0f, false);   // TV: tamaño original
+        DrawDonut(0.70f, true);   // GamePad: 70 % de tamaño
 
-		A += 0.04f;
-		B += 0.02f;
+        A += 0.04f;
+        B += 0.02f;
 
         for (int i = 0; i < DONUT_TEXT_LINES; i++)
         {
             Renderer_DrawText(0, HEIGHT + i, DONUT_TEXT[i]);
         }
 
-        
+        // Medidor de FPS
         snprintf(fpsText, sizeof(fpsText),
                  "FPS: %u / %d", displayedFPS, TARGET_FPS);
 
@@ -168,7 +151,7 @@ int main(void)
 
         Renderer_EndFrame();
 
-        
+        // Calcular FPS real
         frameCount++;
 
         uint64_t now = OSGetTime();
@@ -183,7 +166,7 @@ int main(void)
             fpsStart = now;
         }
 
-        
+        // Limitar FPS
         if (lastFrame != 0)
         {
             uint64_t elapsed = now - lastFrame;
